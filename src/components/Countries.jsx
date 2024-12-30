@@ -1,30 +1,49 @@
 import { useState } from 'react'
-import api from '../mocks/api.json'
+import useField from '../hooks/useField'
 
 function Countries() {
-    const [country, setCountry] = useState('')
+    const [country, setCountry] = useState(null)
+    const [error, setError] = useState(null)
+
+    const nameInput = useField('text')
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(country)
+        setError(null)
+        setCountry(null)
+        fetch(`https://studies.cs.helsinki.fi/restcountries/api/name/${nameInput.value}`)
+            .then(data => {
+                if(!data.ok) throw new Error ('No se hallo xd')
+                return data.json()
+            })
+            .then(data => setCountry(data))
+            .catch(err=> setError(err.message))
     }
     return (
         <div>
             <form action="" onSubmit={handleSubmit}>
-                <label htmlFor="countryInput">Country </label>
-                <input type="text" id='countryInput' value={country} onChange={(e) => setCountry(e.target.value)} />
+                <input {...nameInput} />
                 <button>Search</button>
             </form>
-            <Country />
+            <Country country={country}/>
+            <ErrorMessage error={error}/>
         </div>
     )
 }
+const ErrorMessage = ({error})=>{
+    if(!error)return null
+    
+    return<p>{error}</p>
+}
 
-const Country = () => {
+const Country = ({country}) => {
+    if (!country) return null
+
     return (
         <div style={{ width: '300px', overflow: 'hidden', padding: '10px', border: '1px solid #ccc', borderRadius: '8px' }}>
-            <div style={{ width: '100%'}}>
+            <div style={{ width: '100%' }}>
                 <img
-                    src={api.flags.svg}
+                    src={country.flags.svg}
                     alt=""
                     style={{
                         width: '100%',
@@ -33,11 +52,11 @@ const Country = () => {
                     }}
                 />
             </div>
-            <h2>{api.name.common}</h2>
-            <p>{api.name.official}</p>
+            <h2>{country.name.common}</h2>
+            <p>{country.name.official}</p>
             <ul>
-                <li>Population: {api.population}</li>
-                <li>Timezones: {api.timezones}</li>
+                <li>Population: {country.population}</li>
+                <li>Timezones: {country.timezones}</li>
             </ul>
         </div>
 
