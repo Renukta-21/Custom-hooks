@@ -1,20 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const useCounter = () => {
-  const [counter, setCounter] = useState(0)
+  const [value, setvalue] = useState(0)
 
-  const increment = () => setCounter(counter + 1)
-  const decrement = () => setCounter(counter - 1)
-  const setZero = () => setCounter(0)
+  const increment = () => setvalue(value + 1)
+  const decrement = () => setvalue(value - 1)
+  const setZero = () => setvalue(0)
 
   return {
-    increment, decrement, setZero
+    value, increment, decrement, setZero
   }
 }
 
 function App() {
+  const counter = useCounter()
+
   return (
-    <div>App</div>
+    <div>
+      <p>Counter: {counter.value}</p>
+      <button onClick={()=> counter.increment()}>+</button>
+      <button onClick={()=> counter.setZero()}>0</button>
+      <button onClick={()=> counter.decrement()}>-</button>
+    </div>
   )
 }
 
