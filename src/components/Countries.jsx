@@ -1,23 +1,17 @@
 import { useState } from 'react'
 import useField from '../hooks/useField'
+import useCountry from '../hooks/useCountry'
 
 function Countries() {
-    const [country, setCountry] = useState(null)
-    const [error, setError] = useState(null)
-
     const nameInput = useField('text')
+    const [name, setName] = useState(null)
+    const {error, setError, country, setCountry} = useCountry(name)
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        setError(null)
         setCountry(null)
-        fetch(`https://studies.cs.helsinki.fi/restcountries/api/name/${nameInput.value}`)
-            .then(data => {
-                if(!data.ok) throw new Error ('Country not found')
-                return data.json()
-            })
-            .then(data => setCountry(data))
-            .catch(err=> setError(err.message))
+        setError(null)
+        setName(nameInput.value)
     }
     return (
         <div>
