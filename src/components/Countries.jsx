@@ -13,7 +13,7 @@ function Countries() {
         setCountry(null)
         fetch(`https://studies.cs.helsinki.fi/restcountries/api/name/${nameInput.value}`)
             .then(data => {
-                if(!data.ok) throw new Error ('No se hallo xd')
+                if(!data.ok) throw new Error ('Country not found')
                 return data.json()
             })
             .then(data => setCountry(data))
